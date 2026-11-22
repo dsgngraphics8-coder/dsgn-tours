@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Shree Residency — G+7 Scheme</title>
+<meta name="description" content="Shree Residency: a G+7 residential scheme with 28 flats, stilt parking, mandir, play area and a terrace pool deck. 4D construction explorer, 3D model and dimensioned floor plans.">
+<meta property="og:title" content="Shree Residency — G+7 Scheme">
+<meta property="og:description" content="28 flats, stilt parking, mandir, terrace pool deck. Explore the build stage by stage on your phone.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{
+  --bg:#f7f4ee; --surface:#fffdf9; --fg:#17171a; --muted:#6b6459; --line:rgba(0,0,0,.11);
+  --accent:#a67525; --accent-ink:#fff; --shadow:0 2px 4px rgba(40,32,18,.05),0 12px 32px rgba(40,32,18,.07);
+  --font:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#111315; --surface:#191c1f; --fg:#f2efe9; --muted:#a09a90; --line:rgba(255,255,255,.12);
+  --accent:#d8a657; --accent-ink:#1a1408; --shadow:0 2px 4px rgba(0,0,0,.3),0 14px 36px rgba(0,0,0,.4);
+  color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#111315; --surface:#191c1f; --fg:#f2efe9; --muted:#a09a90; --line:rgba(255,255,255,.12);
+  --accent:#d8a657; --accent-ink:#1a1408; --shadow:0 2px 4px rgba(0,0,0,.3),0 14px 36px rgba(0,0,0,.4);
+  color-scheme:dark; }
+*{box-sizing:border-box}
+img{max-width:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+section{padding-block:clamp(34px,7vw,60px)}
+h1,h2,h3{text-wrap:balance;margin:0}
+.eyebrow{font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+header{border-bottom:1px solid var(--line);background:var(--surface)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
+.logo{font-weight:800;font-size:15px;letter-spacing:-.01em}
+.logo small{display:block;font-weight:500;font-size:11px;color:var(--muted)}
+.bar a.lnk{font:600 13px var(--font);color:var(--muted);text-decoration:none}
+.bar a.lnk:hover{color:var(--fg)}
+.hero{padding-block:clamp(38px,8vw,66px)}
+.hero h1{font-size:clamp(30px,6.2vw,48px);line-height:1.08;letter-spacing:-.025em;font-weight:800;margin:14px 0 0}
+.hero p.lede{font-size:clamp(15px,2.3vw,18px);color:var(--muted);max-width:54ch;margin:14px 0 0}
+.facts{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:22px;padding:0;list-style:none}
+.facts li{font:500 13px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.facts b{display:block;font:800 19px var(--font);color:var(--fg);letter-spacing:-.01em}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:8px;font:700 14px var(--font);text-decoration:none;border-radius:999px;padding:13px 22px;border:1px solid transparent}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{filter:brightness(1.07)}
+.btn-ghost{border-color:var(--line);color:var(--fg);background:var(--surface)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+h2.sec{font-size:clamp(21px,3.4vw,27px);letter-spacing:-.02em;font-weight:800;margin:10px 0 6px}
+.sub{color:var(--muted);font-size:15px;max-width:60ch;margin:0 0 22px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,228px),1fr));gap:14px}
+.feat{padding:20px;min-width:0}
+.feat h3{font-size:15px;font-weight:750;margin-bottom:5px}
+.feat p{margin:0;font-size:14px;color:var(--muted)}
+.num{font:800 12px var(--mono);color:var(--accent);letter-spacing:.08em}
+.sheets{display:grid;gap:16px}
+figure{margin:0}
+.planwrap{padding:12px;background:var(--surface)}
+.planwrap img{display:block;width:100%;height:auto;border-radius:8px}
+figcaption{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between;align-items:center;padding:13px 16px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+figcaption a{color:var(--accent);font-weight:700;text-decoration:none}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:460px;font-size:14px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line)}
+th{font:600 11px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+td{font-variant-numeric:tabular-nums}
+td:first-child{font-weight:650}
+tbody tr:last-child td{border-bottom:0}
+tfoot td{font-weight:800;border-top:2px solid var(--line)}
+footer{border-top:1px solid var(--line);background:var(--surface)}
+.foot{display:flex;flex-wrap:wrap;gap:18px 40px;justify-content:space-between;padding-block:30px;font-size:14px}
+.foot a{color:var(--fg);text-decoration:none;font-weight:650}
+.foot a:hover{color:var(--accent)}
+.foot .muted{color:var(--muted);font-weight:500}
+.copy{padding-bottom:30px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <div class="logo">DSGN Graphics<small>Architectural visualisation</small></div>
+    <a class="lnk" href="#contact">Contact</a>
+  </div>
+</header>
+
+<main>
+<section class="wrap hero">
+  <p class="eyebrow">Residential scheme · Sample project</p>
+  <h1>Shree Residency</h1>
+  <p class="lede">A G+7 tower on a 42 × 32 m plot — 28 flats, stilt parking, a mandir, children's play area, and a terrace pool deck with gym and community hall. Watch it build floor by floor, then read every dimension off the drawings.</p>
+  <ul class="facts">
+    <li><b>28</b> flats · G+7</li>
+    <li><b>30.0 × 17.0</b> m tower</li>
+    <li><b>25.2</b> m to parapet</li>
+    <li><b>17</b> stilt car bays</li>
+  </ul>
+  <div class="cta">
+    <a class="btn btn-primary" href="walkthrough.html">Open the 4D explorer &rarr;</a>
+    <a class="btn btn-ghost" href="#plans">See the floor plans</a>
+  </div>
+  <img src="assets/cover.jpg" alt="Aerial view of the Shree Residency tower and site" style="display:block;width:100%;height:auto;margin-top:32px;border-radius:18px;box-shadow:var(--shadow)">
+</section>
+
+<section class="wrap" id="explore">
+  <p class="eyebrow">01 — 4D</p>
+  <h2 class="sec">The fourth dimension is time</h2>
+  <p class="sub">A 3D model shows what the building looks like. The 4D explorer shows how it gets there — drag the slider and the scheme rises from bare plot to finished terrace, one stage at a time. Buyers see progress; site teams see sequence.</p>
+  <div class="grid">
+    <div class="card feat"><p class="num">STAGE</p><h3>10 build stages</h3><p>Site and compound, stilt and services, each of the seven floors, then the terrace amenities.</p></div>
+    <div class="card feat"><p class="num">PLAY</p><h3>Auto-play the build</h3><p>One tap runs the whole sequence — the clip every builder wants for a launch.</p></div>
+    <div class="card feat"><p class="num">LIGHT</p><h3>Day and evening</h3><p>Switch the sun. Evening shows the massing and skyline the way an elevation never can.</p></div>
+  </div>
+  <div class="cta"><a class="btn btn-primary" href="walkthrough.html">Open the 4D explorer &rarr;</a></div>
+</section>
+
+<section class="wrap" id="plans">
+  <p class="eyebrow">02 — Drawings</p>
+  <h2 class="sec">Three sheets, drawn to scale</h2>
+  <p class="sub">Scale 1:150, dimensions in metres. The 3D model is generated from these exact coordinates — the drawings and the model cannot disagree.</p>
+  <div class="sheets">
+    <figure class="card">
+      <div class="planwrap"><img src="assets/01_ground_floor.svg" alt="Ground floor plan: stilt parking, entrance lobby, mandir, play area and landscape" loading="lazy"></div>
+      <figcaption><span>Sheet 01 — Ground floor · stilt parking, mandir, play area</span><a href="assets/01_ground_floor.png" download>PNG</a></figcaption>
+    </figure>
+    <figure class="card">
+      <div class="planwrap"><img src="assets/02_typical_floor.svg" alt="Typical floor plan: four flats per floor with room sizes" loading="lazy"></div>
+      <figcaption><span>Sheet 02 — Typical floor · 1st to 7th</span><a href="assets/02_typical_floor.png" download>PNG</a></figcaption>
+    </figure>
+    <figure class="card">
+      <div class="planwrap"><img src="assets/03_terrace_amenities.svg" alt="Terrace amenity deck: swimming pool, gym, community hall and pergola" loading="lazy"></div>
+      <figcaption><span>Sheet 03 — Terrace amenity deck</span><a href="assets/03_terrace_amenities.png" download>PNG</a></figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="wrap" id="units">
+  <p class="eyebrow">03 — Unit mix</p>
+  <h2 class="sec">Four flats per floor</h2>
+  <p class="sub">Two 3BHK at the front, two 2BHK behind, around a central core with two lifts, a staircase and a refuge terrace.</p>
+  <div class="card tablewrap">
+    <table>
+      <thead><tr><th>Flat</th><th>Type</th><th>Built-up</th><th>Carpet</th><th>Per floor</th><th>In scheme</th></tr></thead>
+      <tbody>
+        <tr><td>A &amp; B</td><td>3 BHK</td><td>995 sq ft</td><td>840 sq ft</td><td>2</td><td>14</td></tr>
+        <tr><td>C &amp; D</td><td>2 BHK</td><td>814 sq ft</td><td>689 sq ft</td><td>2</td><td>14</td></tr>
+      </tbody>
+      <tfoot><tr><td>Total</td><td>—</td><td>—</td><td>—</td><td>4</td><td>28</td></tr></tfoot>
+    </table>
+  </div>
+</section>
+
+<section class="wrap" id="amenities">
+  <p class="eyebrow">04 — Amenities</p>
+  <h2 class="sec">Ground and terrace</h2>
+  <div class="grid">
+    <div class="card feat"><p class="num">GROUND</p><h3>Mandir</h3><p>6.0 × 4.5 m, set in the rear landscape with a stepped shikhara and kalash.</p></div>
+    <div class="card feat"><p class="num">GROUND</p><h3>Children's play area</h3><p>14.0 × 5.0 m, 753 sq ft, on the front setback away from the driveway.</p></div>
+    <div class="card feat"><p class="num">GROUND</p><h3>Stilt parking</h3><p>17 covered car bays, two-wheeler parking and 5 visitor bays.</p></div>
+    <div class="card feat"><p class="num">GROUND</p><h3>Landscaped garden</h3><p>18.5 × 4.5 m with seating, plus society office and security cabin.</p></div>
+    <div class="card feat"><p class="num">TERRACE</p><h3>Swimming pool</h3><p>9.0 × 7.0 m at 1.2–1.5 m deep, with a separate kids' pool and changing rooms.</p></div>
+    <div class="card feat"><p class="num">TERRACE</p><h3>Gym &amp; community hall</h3><p>294 sq ft gym and a 314 sq ft hall, with pantry, yoga deck and a pergola.</p></div>
+  </div>
+</section>
+
+<section class="wrap" id="contact">
+  <p class="eyebrow">05 — Work with us</p>
+  <h2 class="sec">Send us your scheme drawings</h2>
+  <p class="sub">Give us the site plan, floor plans and elevation — PDF, CAD, or a clear photo of a print. We build the scheme to its exact dimensions and hand back one link: the 4D explorer, the 3D model, clean drawings and a launch video.</p>
+  <div class="grid">
+    <div class="card feat"><p class="num">STEP 1</p><h3>You send drawings</h3><p>Any readable format with at least one dimension to scale from.</p></div>
+    <div class="card feat"><p class="num">STEP 2</p><h3>We model the scheme</h3><p>Built 1:1 in metres — real wall thicknesses, floor heights and unit mix.</p></div>
+    <div class="card feat"><p class="num">STEP 3</p><h3>You get a link</h3><p>One URL your sales team sends on WhatsApp. Works on any phone.</p></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div><span class="muted">WhatsApp</span><br><a href="https://wa.me/917385880827">+91 73858 80827</a></div>
+    <div><span class="muted">Email</span><br><a href="mailto:dsgn0827@gmail.com">dsgn0827@gmail.com</a></div>
+    <div><span class="muted">Web</span><br><a href="https://dsgngraphics.com">dsgngraphics.com</a></div>
+    <div><span class="muted">Studio</span><br><span style="font-weight:650">Amravati, Maharashtra</span></div>
+  </div>
+  <div class="wrap copy">© DSGN Graphics · Shree Residency is a sample scheme shown for demonstration. The layout, areas and name are illustrative, not a built or approved project.</div>
+</footer>
+</body>
+</html>
