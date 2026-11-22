@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>3BHK Virtual Walkthrough</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: full-bleed 3D canvas; one glass panel top-left (room + size), control dock bottom; drawer for finishes. */
+:root{
+  --bg:#0f1214; --fg:#f2efe9; --muted:#a9a399; --panel:rgba(18,21,24,.78); --line:rgba(255,255,255,.12);
+  --accent:#d8a657; --accent-ink:#1a1408; --ok:#7fb77e;
+  --font:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){ --bg:#e9e5dd; --fg:#15171a; --muted:#5b5a55; --panel:rgba(255,253,249,.82); --line:rgba(0,0,0,.12); --accent:#b07a1f; --accent-ink:#fff; color-scheme:light } }
+:root[data-theme="light"]{ --bg:#e9e5dd; --fg:#15171a; --muted:#5b5a55; --panel:rgba(255,253,249,.82); --line:rgba(0,0,0,.12); --accent:#b07a1f; --accent-ink:#fff; color-scheme:light }
+html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);overflow:hidden;-webkit-tap-highlight-color:transparent}
+#app{position:fixed;inset:0;touch-action:none}
+canvas{display:block;width:100%;height:100%}
+.hud{position:absolute;left:0;right:0;pointer-events:none;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.hud>*{pointer-events:auto}
+.top{top:calc(12px + env(safe-area-inset-top,0px));display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.card{background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-width:0}
+.eyebrow{font:600 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+#room{font-weight:800;font-size:22px;line-height:1.1;margin:4px 0 2px;text-wrap:balance}
+#size{font:500 13px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.brand{text-align:right;font-weight:700;font-size:13px}
+.brand small{display:block;color:var(--muted);font-weight:500;font-size:11px;margin-top:2px}
+.dock{bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center}
+.seg{display:flex;gap:4px;background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:999px;padding:4px}
+.seg button,.btn{font:700 13px var(--font);border:0;border-radius:999px;padding:10px 16px;background:transparent;color:var(--fg);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.seg button:focus-visible,.btn:focus-visible,.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.rooms{top:calc(96px + env(safe-area-inset-top,0px));display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.rooms::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;font:600 12px var(--font);padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(10px);color:var(--fg);cursor:pointer}
+.chip[aria-current="true"]{border-color:var(--accent);color:var(--accent)}
+#drawer{position:absolute;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(72px + env(safe-area-inset-bottom,0px));width:min(320px,calc(100vw - 32px));max-height:min(60vh,420px);overflow:auto;display:grid;gap:14px}
+#drawer h3{margin:0 0 8px;font-size:13px;font-weight:700}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opts button{font:600 12px var(--font);padding:7px 11px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer}
+.opts button[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,transparent)}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:6px;border:1px solid var(--line)}
+#joy{position:absolute;left:max(24px,env(safe-area-inset-left,0px));bottom:calc(92px + env(safe-area-inset-bottom,0px));width:120px;height:120px;border-radius:50%;border:1px solid var(--line);background:var(--panel);display:none;touch-action:none}
+#joy i{position:absolute;left:38px;top:38px;width:44px;height:44px;border-radius:50%;background:var(--accent);opacity:.9}
+.touch #joy{display:block}
+.hint{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));font:500 12px var(--mono);color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px;white-space:nowrap}
+#load{position:absolute;inset:0;display:grid;place-items:center;background:var(--bg);z-index:5;transition:opacity .4s}
+#load .in{text-align:center;max-width:320px;padding:0 20px}
+#load h1{font-size:26px;font-weight:800;margin:0 0 6px;text-wrap:balance}
+#load p{color:var(--muted);margin:0 0 18px;font-size:14px}
+.bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+@media (max-width:480px){ #room{font-size:18px} .brand small{display:none} #drawer{max-height:46vh} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div id="load"><div class="in"><div class="eyebrow">Sample unit · 3 BHK</div><h1>Walk through the flat on your phone</h1><p>Loading the 3D model (9 MB). Works best on Wi-Fi.</p><div class="bar"><i id="pb"></i></div></div></div>
+
+  <div class="hud top">
+    <div class="card"><div class="eyebrow">You are in</div><div id="room">Entrance</div><div id="size">—</div></div>
+    <div class="card brand"><a href="./" style="display:block;margin-bottom:5px;font-size:11px;color:var(--accent);text-decoration:none;font-weight:700">&#8592; Overview</a>DSGN Graphics<small>Interactive walkthrough</small></div>
+  </div>
+
+  <div class="hud rooms" id="rooms"></div>
+
+  <div id="joy"><i></i></div>
+  <div class="hint" id="hint">Drag to look · WASD or arrows to walk</div>
+
+  <div id="drawer" class="card" hidden>
+    <div><h3>Living &amp; dining floor</h3><div class="opts" data-group="living"></div></div>
+    <div><h3>Bedroom floors</h3><div class="opts" data-group="bed"></div></div>
+    <div><h3>Wall colour</h3><div class="opts" data-group="wall"></div></div>
+    <div><h3>Time of day</h3><div class="opts" data-group="time"></div></div>
+  </div>
+
+  <div class="hud dock">
+    <div class="seg" role="group" aria-label="View mode">
+      <button id="bWalk" aria-pressed="true">Walk</button>
+      <button id="bPlan" aria-pressed="false">Plan view</button>
+      <button id="bFin" aria-pressed="false">Finishes</button>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const $=s=>document.querySelector(s);
+const isTouch=matchMedia('(pointer:coarse)').matches; if(isTouch){document.body.classList.add('touch');$('#hint').textContent='Left pad: walk · Drag right side: look';}
+
+// ---- Rooms (Blender metres; x right, y up in plan). Three: (x, h, -y)
+const ROOMS=[
+ {id:'entry',name:'Entrance',x0:13.8,x1:17,y0:6.5,y1:7.7,  size:'Main door · foyer',          pos:[14.3,7.1],look:[9,6.9]},
+ {id:'living',name:'Living Room',x0:0,x1:6.6,y0:0,y1:6.5, size:'6.6 × 6.5 m · 462 sq ft', pos:[5.6,4.9],look:[2,2.4]},
+ {id:'dining',name:'Dining',x0:6.6,x1:10.5,y0:0,y1:6.5,  size:'3.9 × 6.5 m · 273 sq ft', pos:[9.6,5.6],look:[8.2,3]},
+ {id:'kitchen',name:'Kitchen',x0:10.5,x1:15,y0:0,y1:4,   size:'4.5 × 4.0 m · 194 sq ft', pos:[11.8,3.4],look:[13.8,0.8]},
+ {id:'balcony',name:'Balcony',x0:0,x1:6,y0:-1.6,y1:0,    size:'6.0 × 1.6 m · 103 sq ft', pos:[3,-0.6],look:[3,-4]},
+ {id:'master',name:'Master Bedroom',x0:0,x1:5,y0:6.5,y1:11.5, size:'5.0 × 5.0 m · 269 sq ft', pos:[4.2,9.8],look:[1.5,7.3]},
+ {id:'mbath',name:'Master Bath',x0:5,x1:7.2,y0:7.7,y1:11.5, size:'2.2 × 3.8 m · 90 sq ft', pos:[6.1,9.9],look:[6,11.4]},
+ {id:'bed2',name:'Bedroom 2',x0:7.2,x1:11,y0:7.7,y1:11.5, size:'3.8 × 3.8 m · 155 sq ft', pos:[8.3,8.2],look:[10.5,10.4]},
+ {id:'bed3',name:'Bedroom 3',x0:11,x1:15,y0:7.7,y1:11.5, size:'4.0 × 3.8 m · 164 sq ft', pos:[11.9,8.3],look:[13.5,10.8]},
+ {id:'bath',name:'Common Bath',x0:10.5,x1:13,y0:4,y1:6.5, size:'2.5 × 2.5 m · 67 sq ft', pos:[12.2,6.1],look:[11.2,4.4]},
+ {id:'utility',name:'Utility',x0:13,x1:15,y0:4,y1:6.5,   size:'2.0 × 2.5 m · 54 sq ft', pos:[14,4.5],look:[14.5,6.2]},
+ {id:'corridor',name:'Corridor',x0:5,x1:15,y0:6.5,y1:7.7, size:'10 m passage',          pos:[13.5,7.1],look:[6,7.1]},
+];
+const EYE=1.55;
+const T=(x,y,h=EYE)=>new THREE.Vector3(x,h,-y);
+
+// ---- Scene
+const app=$('#app');
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(innerWidth,innerHeight);
+renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.05; renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+app.prepend(renderer.domElement);
+const scene=new THREE.Scene();
+const cam=new THREE.PerspectiveCamera(70,innerWidth/innerHeight,0.05,200);
+const sky=new THREE.Color(0xcfdbe6); scene.background=sky; scene.fog=new THREE.Fog(sky,40,120);
+
+const hemi=new THREE.HemisphereLight(0xdfe8f2,0xd9cfc1,0.95); scene.add(hemi);
+const sun=new THREE.DirectionalLight(0xfff1dc,2.2); sun.position.set(6,14,10); sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048); sun.shadow.bias=-0.0006; sun.shadow.normalBias=0.02;
+const sc=sun.shadow.camera; sc.left=-14;sc.right=14;sc.top=14;sc.bottom=-14;sc.near=1;sc.far=50; sun.target.position.set(7.5,0,-5); scene.add(sun,sun.target);
+const amb=new THREE.AmbientLight(0xffffff,0.25); scene.add(amb);
+// warm interior lamps (used for "evening")
+const lamps=new THREE.Group(); scene.add(lamps);
+for(const [x,y] of [[3,3.2],[8.2,3.2],[12.7,2],[2.5,9],[9.1,9.6],[13,9.6],[10,7.1]]){const p=new THREE.PointLight(0xffc27a,0,9,1.6);p.position.copy(T(x,y,2.3));lamps.add(p);}
+lamps.visible=false;
+
+// ceiling (walk mode only)
+const ceil=new THREE.Mesh(new THREE.PlaneGeometry(15.4,12.1),new THREE.MeshStandardMaterial({color:0xf4f1ec,roughness:0.95,side:THREE.DoubleSide,emissive:0x5a564f}));
+ceil.rotation.x=Math.PI/2; ceil.position.set(7.5,2.5,-5.75); ceil.receiveShadow=true; scene.add(ceil);
+// ground outside
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(300,300),new THREE.MeshStandardMaterial({color:0xb8c2b0,roughness:1}));
+ground.rotation.x=-Math.PI/2; ground.position.y=-0.31; ground.receiveShadow=true; scene.add(ground);
+
+// ---- Load model
+const colliders=[]; const mats={}; const floors={living:[],bed:[]}; let wallMat=null; const sprites=new THREE.Group(); scene.add(sprites);
+const loader=new GLTFLoader();
+loader.load('assets/model.glb',g=>{
+  const root=g.scene; scene.add(root);
+  const box=new THREE.Box3();
+  root.traverse(o=>{
+    if(!o.isMesh) return;
+    const n=o.name, m=o.material; mats[m.name]=m;
+    o.castShadow=!/^F_|Glass|Rug|Base/.test(n); o.receiveShadow=true;
+    if(m.name==='Glass'){m.transmission=0;m.transparent=true;m.opacity=0.28;m.roughness=0.05;m.depthWrite=false;}
+    if(m.map){m.map.anisotropy=8;}
+    if(m.name==='Wall_White') wallMat=m;
+    if(/^F_(Living|Corridor)$/.test(n)) floors.living.push(o);
+    if(/^F_(Master|Bed2|Bed3)$/.test(n)) floors.bed.push(o);
+    if(/^(W_|I_|Kit_Counter|Fridge|.*Wardrobe|MBed_|B2_Frame|B3_Frame|Sofa_|TV_Unit|Dining_Top|Washer|.*Vanity|.*_WC$)/.test(n)){
+      box.setFromObject(o); if(box.max.y>0.45 && !/lin\d/.test(n)) colliders.push(box.clone());
+    }
+  });
+  for(const r of ROOMS) if(r.id!=='entry'&&r.id!=='corridor') sprites.add(label(r));
+  buildFinishes(); renderer.shadowMap.autoUpdate=false; renderer.shadowMap.needsUpdate=true; setTimeout(()=>{$('#load').style.opacity=0;setTimeout(()=>$('#load').remove(),450);},200);
+},e=>{ if(e.total) $('#pb').style.width=(100*e.loaded/e.total)+'%'; },err=>{ $('#load p').textContent='Could not load the model. Check your connection and reload.'; console.error(err); });
+
+function label(r){
+  const c=document.createElement('canvas'); c.width=512;c.height=160; const x=c.getContext('2d');
+  x.fillStyle='rgba(20,22,26,.78)'; roundRect(x,0,0,512,160,28); x.fill();
+  x.fillStyle='#f2efe9'; x.font='700 56px Manrope, sans-serif'; x.textAlign='center'; x.fillText(r.name,256,72);
+  x.fillStyle='#d8a657'; x.font='500 34px "IBM Plex Mono", monospace'; x.fillText(r.size.split('·')[0].trim(),256,125);
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace;
+  const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,depthTest:false,transparent:true})); s.scale.set(2.6,0.81,1);
+  s.position.copy(T((r.x0+r.x1)/2,(r.y0+r.y1)/2,3.2)); s.visible=false; return s;
+}
+function roundRect(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath();}
+
+// ---- Walk controls
+let mode='walk';
+let yaw=Math.PI/2, pitch=0; // yaw: facing -x initially
+const start=ROOMS[0]; cam.position.copy(T(...start.pos)); lookAt2D(start.look);
+function lookAt2D([x,y]){const d=T(x,y).sub(cam.position);yaw=Math.atan2(-d.x,-d.z);pitch=0;}
+const keys={}; addEventListener('keydown',e=>{keys[e.code]=true;}); addEventListener('keyup',e=>{keys[e.code]=false;});
+let dragging=false,lx=0,ly=0,lookId=null;
+const onDown=e=>{ if(mode!=='walk')return; const p=pt(e); if(isTouch&&p.x<innerWidth*0.45)return; dragging=true;lx=p.x;ly=p.y;lookId=p.id; };
+const onMove=e=>{ if(!dragging||mode!=='walk')return; const p=pt(e); if(p.id!==lookId)return; yaw-=(p.x-lx)*0.0045; pitch-=(p.y-ly)*0.0045; pitch=Math.max(-1.2,Math.min(1.2,pitch)); lx=p.x;ly=p.y; };
+const onUp=e=>{ if(pt(e).id===lookId) dragging=false; };
+function pt(e){ if(e.changedTouches){const t=e.changedTouches[0];return{x:t.clientX,y:t.clientY,id:t.identifier};} return{x:e.clientX,y:e.clientY,id:'m'}; }
+const cv=renderer.domElement;
+cv.addEventListener('mousedown',onDown); addEventListener('mousemove',onMove); addEventListener('mouseup',onUp);
+cv.addEventListener('touchstart',onDown,{passive:true}); cv.addEventListener('touchmove',onMove,{passive:true}); cv.addEventListener('touchend',onUp);
+
+// joystick
+const joy=$('#joy'), knob=joy.querySelector('i'); let jv={x:0,y:0}, jid=null;
+joy.addEventListener('touchstart',e=>{jid=e.changedTouches[0].identifier;jm(e);},{passive:true});
+joy.addEventListener('touchmove',jm,{passive:true});
+joy.addEventListener('touchend',()=>{jid=null;jv={x:0,y:0};knob.style.transform='';});
+function jm(e){ for(const t of e.changedTouches){ if(t.identifier!==jid)continue; const r=joy.getBoundingClientRect(); let dx=t.clientX-(r.left+60),dy=t.clientY-(r.top+60); const l=Math.hypot(dx,dy)||1,m=Math.min(l,40); dx=dx/l*m;dy=dy/l*m; knob.style.transform=`translate(${dx}px,${dy}px)`; jv={x:dx/40,y:dy/40}; } }
+
+function collide(pos){ const r=0.28; for(const b of colliders){ if(b.min.y>EYE||b.max.y<0.3)continue; if(pos.x>b.min.x-r&&pos.x<b.max.x+r&&pos.z>b.min.z-r&&pos.z<b.max.z+r)return true;} return false; }
+function walk(dt){
+  let f=0,s=0;
+  if(keys.KeyW||keys.ArrowUp)f+=1; if(keys.KeyS||keys.ArrowDown)f-=1; if(keys.KeyD||keys.ArrowRight)s+=1; if(keys.KeyA||keys.ArrowLeft)s-=1;
+  f+=-jv.y; s+=jv.x;
+  if(!f&&!s)return;
+  const sp=2.2*dt, fx=-Math.sin(yaw), fz=-Math.cos(yaw), rx=Math.cos(yaw), rz=-Math.sin(yaw);
+  const nx=cam.position.x+(fx*f+rx*s)*sp, nz=cam.position.z+(fz*f+rz*s)*sp;
+  const p=cam.position.clone(); p.x=nx; if(!collide(p))cam.position.x=nx;
+  p.copy(cam.position); p.z=nz; if(!collide(p))cam.position.z=nz;
+  cam.position.x=Math.max(-3,Math.min(18,cam.position.x)); cam.position.z=Math.max(-14,Math.min(5,cam.position.z));
+}
+
+// ---- Plan (orbit) mode
+const orbit=new OrbitControls(cam,cv); orbit.enabled=false; orbit.target.set(7.5,0,-5.2); orbit.maxPolarAngle=Math.PI/2.1; orbit.minDistance=6; orbit.maxDistance=40; orbit.enableDamping=true;
+let saved=null;
+function setMode(m){
+  mode=m; $('#bWalk').setAttribute('aria-pressed',m==='walk'); $('#bPlan').setAttribute('aria-pressed',m==='plan');
+  $('#hint').hidden=m!=='walk'; joy.style.display=(m==='walk'&&isTouch)?'block':'none'; $('#rooms').hidden=false;
+  if(m==='plan'){ renderer.shadowMap.needsUpdate=true; saved={p:cam.position.clone(),yaw,pitch}; cam.position.set(7.5+9,19,-5.2+12); orbit.target.set(7.5,0,-5.2); orbit.enabled=true; ceil.visible=false; sprites.children.forEach(s=>s.visible=true); $('#room').textContent='Plan view'; $('#size').textContent='15 × 11.5 m · 1,730 sq ft carpet'; }
+  else { orbit.enabled=false; renderer.shadowMap.needsUpdate=true; ceil.visible=true; sprites.children.forEach(s=>s.visible=false); if(saved){cam.position.copy(saved.p);yaw=saved.yaw;pitch=saved.pitch;} }
+}
+$('#bWalk').onclick=()=>{setMode('walk');closeDrawer();}; $('#bPlan').onclick=()=>{setMode('plan');closeDrawer();};
+$('#bFin').onclick=()=>{const d=$('#drawer'); d.hidden=!d.hidden; $('#bFin').setAttribute('aria-pressed',!d.hidden);};
+function closeDrawer(){$('#drawer').hidden=true;$('#bFin').setAttribute('aria-pressed','false');}
+
+// room chips
+const chips=$('#rooms');
+for(const r of ROOMS.filter(r=>!['entry','corridor'].includes(r.id))){ const b=document.createElement('button'); b.className='chip'; b.textContent=r.name; b.dataset.id=r.id;
+  b.onclick=()=>{ if(mode!=='walk')setMode('walk'); cam.position.copy(T(...r.pos)); lookAt2D(r.look); closeDrawer(); }; chips.append(b); }
+function whereAmI(){ const x=cam.position.x,y=-cam.position.z; const r=ROOMS.find(r=>x>=r.x0&&x<r.x1&&y>=r.y0&&y<r.y1); if(r&&r!==curRoom){curRoom=r;$('#room').textContent=r.name;$('#size').textContent=r.size;chips.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-current',c.dataset.id===r.id));} }
+let curRoom=null;
+
+// ---- Finishes
+function buildFinishes(){
+  const F={ 'Marble':'marble_01','Wooden laminate':'laminate_floor_02','Large tiles':'large_floor_tiles_02','Teak deck':'wood_floor_deck' };
+  opts('living',Object.keys(F),'Marble',k=>floors.living.forEach(o=>o.material=mats[F[k]]));
+  opts('bed',Object.keys(F),'Wooden laminate',k=>floors.bed.forEach(o=>o.material=mats[F[k]]));
+  const W={'Warm white':0xd9d1c3,'Ivory':0xe6ddc8,'Sage':0xb9c4ad,'Dusty blue':0xa9b8c6,'Blush':0xd9bdb3,'Greige':0xbfb6ab};
+  opts('wall',Object.keys(W),'Warm white',k=>{wallMat.color.setHex(W[k]);},k=>'#'+W[k].toString(16).padStart(6,'0'));
+  opts('time',['Day','Evening'],'Day',k=>{ const ev=k==='Evening'; sun.intensity=ev?0.35:2.2; sun.color.setHex(ev?0xffb070:0xfff1dc); hemi.intensity=ev?0.25:0.9; amb.intensity=ev?0.08:0.25; lamps.visible=ev; lamps.children.forEach(l=>l.intensity=ev?14:0); renderer.shadowMap.needsUpdate=true; const c=ev?0x2a2f3d:0xcfdbe6; scene.background.setHex(c); scene.fog.color.setHex(c); renderer.toneMappingExposure=ev?0.9:1.05; });
+}
+function opts(group,keys,def,fn,sw){ const el=document.querySelector(`[data-group="${group}"]`);
+  for(const k of keys){ const b=document.createElement('button'); b.setAttribute('aria-pressed',k===def); b.innerHTML=(sw?`<span class="sw" style="background:${sw(k)}"></span>`:'')+k;
+    b.onclick=()=>{ el.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true'); fn(k); }; el.append(b);} }
+
+// demo hook (used for recorded tours)
+window.__wt={ r:renderer, sun, shadowRefresh(){renderer.shadowMap.needsUpdate=true;}, set(x,y,yw,pt){cam.position.set(x,EYE,-y);yaw=yw;pitch=pt;}, setMode, orbitTo(az,el,dist){ const t=orbit.target; cam.position.set(t.x+dist*Math.cos(el)*Math.sin(az), t.y+dist*Math.sin(el), t.z+dist*Math.cos(el)*Math.cos(az)); orbit.update(); }, frame(){return new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));} };
+// ---- Loop
+addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+const clock=new THREE.Clock();
+renderer.setAnimationLoop(()=>{
+  const dt=Math.min(clock.getDelta(),0.05);
+  if(mode==='walk'){ walk(dt); cam.rotation.set(0,0,0,'YXZ'); cam.rotation.y=yaw; cam.rotation.x=pitch; whereAmI(); }
+  else orbit.update();
+  renderer.render(scene,cam);
+});
+</script>
+</body>
+</html>
