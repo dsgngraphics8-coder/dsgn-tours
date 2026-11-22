@@ -1,14 +1,22 @@
-# 3 BHK Virtual Tour — DSGN Graphics
+# DSGN Graphics — Virtual Tours
 
-A client-facing presentation site for one residential project. Plain static files, no build step.
+Client-facing virtual tours. Plain static files — no build step, no framework, no CDN.
 
-| File | What it is |
-|---|---|
-| `index.html` | Landing page — video, 2D plan, area statement, contact |
-| `walkthrough.html` | Interactive 3D walkthrough (three.js) |
-| `assets/model.glb` | The flat, exported from Blender (9.3 MB) |
-| `assets/walkthrough.mp4` | 51-second guided video tour with music |
-| `assets/plan-2d.svg` / `.png` | Dimensioned 2D floor plan |
+```
+index.html                 studio page, lists every project
+3bhk-residence/
+  index.html               project page — video, 2D plan, areas, contact
+  walkthrough.html         interactive 3D walkthrough (three.js, vendored)
+  assets/
+    model.glb              the flat, exported from Blender (9.3 MB)
+    walkthrough.mp4        51-second guided video tour with music
+    plan-2d.svg / .png     dimensioned 2D floor plan
+    cover.jpg  poster.jpg  still images
+    three/                 three.js r160, served from the repo — no CDN to fail
+```
+
+One folder per project. This one lives at `/3bhk-residence`; the next client is
+a new folder and a new URL on the same site.
 
 ## Deploying to Vercel
 
@@ -20,9 +28,10 @@ A client-facing presentation site for one residential project. Plain static file
 Vercel gives a `*.vercel.app` link immediately. To use a custom domain
 (e.g. `tour.dsgngraphics.com`), add it under **Project → Settings → Domains**.
 
-## Reusing this for a new client
+## Adding a new client project
 
-Copy the repo, then replace:
+Copy `3bhk-residence/` to a new folder named after the client, add a card to the
+root `index.html`, then replace inside the new folder:
 
 - `assets/model.glb` — new Blender export
 - `assets/walkthrough.mp4` — new video
@@ -30,7 +39,7 @@ Copy the repo, then replace:
 - the `ROOMS` array near the top of the script in `walkthrough.html` (room names, x/y bounds, sizes)
 - the text and area table in `index.html`
 
-Each client gets its own repo and its own Vercel project, so each has its own link.
+Push, and it is live at `/<client-folder>` within about a minute.
 
 ---
 © DSGN Graphics · Amravati

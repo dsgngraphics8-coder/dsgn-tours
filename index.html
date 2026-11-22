@@ -3,10 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>3 BHK Residence — Virtual Tour</title>
-<meta name="description" content="Interactive 3D walkthrough, video tour and 2D floor plan for a 3 BHK residence. Presented by DSGN Graphics.">
-<meta property="og:title" content="3 BHK Residence — Virtual Tour">
-<meta property="og:description" content="Walk through the flat on your phone. Interactive 3D, video tour and dimensioned floor plan.">
+<title>DSGN Graphics — Virtual Tours</title>
+<meta name="description" content="Interactive 3D walkthroughs, video tours and floor plans for residential and commercial projects. DSGN Graphics, Amravati.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
 :root{
@@ -23,175 +21,59 @@
   --bg:#111315; --surface:#191c1f; --fg:#f2efe9; --muted:#a09a90; --line:rgba(255,255,255,.12);
   --accent:#d8a657; --accent-ink:#1a1408; --shadow:0 2px 4px rgba(0,0,0,.3),0 14px 36px rgba(0,0,0,.4);
   color-scheme:dark; }
-
 *{box-sizing:border-box}
+img{max-width:100%}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);line-height:1.55;-webkit-font-smoothing:antialiased}
-.wrap{max-width:980px;margin:0 auto;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
-section{padding-block:clamp(34px,7vw,60px)}
-h1,h2,h3{text-wrap:balance;margin:0}
+.wrap{max-width:900px;margin:0 auto;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
 .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
-
-/* header */
-header{border-bottom:1px solid var(--line);background:var(--surface)}
-.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
-.logo{font-weight:800;font-size:15px;letter-spacing:-.01em}
-.logo small{display:block;font-weight:500;font-size:11px;color:var(--muted);letter-spacing:.02em}
-.bar a.lnk{font:600 13px var(--font);color:var(--muted);text-decoration:none}
-.bar a.lnk:hover{color:var(--fg)}
-
-/* hero */
-.hero{padding-block:clamp(38px,8vw,72px)}
-.hero h1{font-size:clamp(30px,6.4vw,50px);line-height:1.08;letter-spacing:-.025em;font-weight:800;margin:14px 0 0}
-.hero p.lede{font-size:clamp(15px,2.3vw,18px);color:var(--muted);max-width:52ch;margin:14px 0 0}
-.facts{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:22px;padding:0;list-style:none}
-.facts li{font:500 13px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
-.facts b{display:block;font:800 19px var(--font);color:var(--fg);letter-spacing:-.01em}
-.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
-.btn{display:inline-flex;align-items:center;gap:8px;font:700 14px var(--font);text-decoration:none;border-radius:999px;padding:13px 22px;border:1px solid transparent;cursor:pointer}
-.btn-primary{background:var(--accent);color:var(--accent-ink)}
-.btn-primary:hover{filter:brightness(1.07)}
-.btn-ghost{border-color:var(--line);color:var(--fg);background:var(--surface)}
-.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
-
-/* cards */
-.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
-h2.sec{font-size:clamp(21px,3.4vw,27px);letter-spacing:-.02em;font-weight:800;margin:10px 0 6px}
-.sub{color:var(--muted);font-size:15px;max-width:58ch;margin:0 0 22px}
-
-video{display:block;width:100%;height:auto;background:#000}
-.planwrap{padding:14px;background:var(--surface)}
-.planwrap img{display:block;width:100%;height:auto;border-radius:8px}
-figcaption{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between;align-items:center;padding:13px 16px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
-figcaption a{color:var(--accent);font-weight:700;text-decoration:none}
-
-/* schedule */
-.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table{border-collapse:collapse;width:100%;min-width:430px;font-size:14px}
-th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line)}
-th{font:600 11px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
-td{font-variant-numeric:tabular-nums}
-td:first-child{font-weight:650}
-tbody tr:last-child td{border-bottom:0}
-tfoot td{font-weight:800;border-top:2px solid var(--line)}
-
-/* steps / features */
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:14px;margin-top:4px}
-.feat{padding:20px}
-.feat h3{font-size:15px;font-weight:750;margin-bottom:5px}
-.feat p{margin:0;font-size:14px;color:var(--muted)}
-.num{font:800 12px var(--mono);color:var(--accent);letter-spacing:.08em}
-
-/* footer */
+header{padding-block:clamp(44px,9vw,80px)}
+h1{font-size:clamp(28px,5.6vw,44px);line-height:1.1;letter-spacing:-.025em;font-weight:800;margin:14px 0 0;text-wrap:balance}
+header p{font-size:clamp(15px,2.3vw,17px);color:var(--muted);max-width:54ch;margin:14px 0 0}
+.projects{display:grid;gap:14px;padding-bottom:clamp(40px,8vw,70px)}
+.proj{display:block;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.proj:hover{border-color:var(--accent)}
+.proj img{display:block;width:100%;height:auto;aspect-ratio:16/7;object-fit:cover;background:#d9d4ca}
+.body{padding:18px 20px;display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;justify-content:space-between}
+.proj h2{font-size:19px;font-weight:750;letter-spacing:-.01em;margin:0}
+.proj .meta{font:500 13px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.proj .go{font-weight:700;font-size:14px;color:var(--accent)}
 footer{border-top:1px solid var(--line);background:var(--surface)}
-.foot{display:flex;flex-wrap:wrap;gap:18px 40px;justify-content:space-between;padding-block:30px;font-size:14px}
+.foot{display:flex;flex-wrap:wrap;gap:16px 36px;padding-block:28px;font-size:14px}
 .foot a{color:var(--fg);text-decoration:none;font-weight:650}
 .foot a:hover{color:var(--accent)}
-.foot .muted{color:var(--muted);font-weight:500}
-.copy{padding-bottom:30px;font-size:12px;color:var(--muted)}
+.foot span.m{color:var(--muted);font-weight:500;display:block}
+.copy{padding-bottom:28px;font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
+<main class="wrap">
+  <header>
+    <p class="eyebrow">DSGN Graphics · Amravati</p>
+    <h1>Virtual tours &amp; architectural visualisation</h1>
+    <p>We turn a 2D floor plan into something a buyer can walk through on their phone — an interactive 3D tour, a short video and clean drawings, all on one link.</p>
+  </header>
 
-<header>
-  <div class="wrap bar">
-    <div class="logo">DSGN Graphics<small>Architectural visualisation</small></div>
-    <a class="lnk" href="#contact">Contact</a>
+  <div class="projects">
+    <a class="proj" href="3bhk-residence/">
+      <img src="3bhk-residence/assets/cover.jpg" alt="Interior view of the 3 BHK living and dining area" loading="lazy">
+      <div class="body">
+        <div>
+          <h2>3 BHK Residence</h2>
+          <p class="meta" style="margin:4px 0 0">1,730 sq ft · 15.0 × 11.5 m · sample project</p>
+        </div>
+        <span class="go">Open tour &rarr;</span>
+      </div>
+    </a>
   </div>
-</header>
-
-<main>
-<section class="wrap hero">
-  <p class="eyebrow">Virtual tour · Sample project</p>
-  <h1>3 BHK Residence</h1>
-  <p class="lede">Walk through the flat room by room, change the flooring and wall colours live, switch from day to evening, and see every dimension on the plan — all from a phone browser. Nothing to install.</p>
-  <ul class="facts">
-    <li><b>1,730</b> sq ft carpet</li>
-    <li><b>15.0 × 11.5</b> m overall</li>
-    <li><b>3</b> bedrooms · 3 baths</li>
-  </ul>
-  <div class="cta">
-    <a class="btn btn-primary" href="walkthrough.html">Start the 3D walkthrough &rarr;</a>
-    <a class="btn btn-ghost" href="#video">Watch the 50-second tour</a>
-  </div>
-</section>
-
-<section class="wrap" id="video">
-  <p class="eyebrow">01 — Video tour</p>
-  <h2 class="sec">A guided 50-second walk</h2>
-  <p class="sub">Send this on WhatsApp when you want the flat to speak for itself. It covers the living and dining area, the finishes options, day-to-evening lighting, both bedrooms, the kitchen and the full plan view.</p>
-  <figure class="card" style="margin:0">
-    <video controls playsinline preload="metadata" poster="assets/plan-2d.png" src="assets/walkthrough.mp4"></video>
-    <figcaption><span>3BHK walkthrough · 720p · 51 seconds</span><a href="assets/walkthrough.mp4" download>Download MP4</a></figcaption>
-  </figure>
-</section>
-
-<section class="wrap" id="tour">
-  <p class="eyebrow">02 — Interactive</p>
-  <h2 class="sec">Let them walk it themselves</h2>
-  <p class="sub">The 3D tour runs in any browser. Buyers drag to look around, tap a room name to jump there, try four floor finishes and six wall colours, and switch the lighting to evening.</p>
-  <div class="grid">
-    <div class="card feat"><p class="num">WALK</p><h3>Room-by-room</h3><p>Drag to look, joystick or arrow keys to move. Eye level is a realistic 1.55 m.</p></div>
-    <div class="card feat"><p class="num">FINISH</p><h3>Live material swaps</h3><p>Marble, laminate, large tiles or teak deck — and six wall colours, changed instantly.</p></div>
-    <div class="card feat"><p class="num">PLAN</p><h3>3D plan view</h3><p>Lift the roof off and orbit the whole flat with every room labelled and sized.</p></div>
-  </div>
-  <div class="cta"><a class="btn btn-primary" href="walkthrough.html">Open the walkthrough &rarr;</a></div>
-</section>
-
-<section class="wrap" id="plan">
-  <p class="eyebrow">03 — Drawings</p>
-  <h2 class="sec">2D floor plan</h2>
-  <p class="sub">Dimensioned to scale. Every room in the 3D model is built to these exact measurements — 230 mm external walls, 150 mm internal, 2.1 m door heights.</p>
-  <figure class="card" style="margin:0">
-    <div class="planwrap"><img src="assets/plan-2d.svg" alt="2D floor plan of the 3 BHK residence with room names and dimensions" loading="lazy"></div>
-    <figcaption><span>Scale 1:100 · dimensions in metres · not for construction</span><a href="assets/plan-2d.png" download>Download PNG</a></figcaption>
-  </figure>
-</section>
-
-<section class="wrap" id="areas">
-  <p class="eyebrow">04 — Schedule</p>
-  <h2 class="sec">Area statement</h2>
-  <p class="sub">Carpet areas, room by room.</p>
-  <div class="card tablewrap">
-    <table>
-      <thead><tr><th>Space</th><th>Size (m)</th><th>Carpet (sq ft)</th></tr></thead>
-      <tbody>
-        <tr><td>Living Room</td><td>6.6 × 6.5</td><td>462</td></tr>
-        <tr><td>Dining</td><td>3.9 × 6.5</td><td>273</td></tr>
-        <tr><td>Kitchen</td><td>4.5 × 4.0</td><td>194</td></tr>
-        <tr><td>Master Bedroom</td><td>5.0 × 5.0</td><td>269</td></tr>
-        <tr><td>Master Bath</td><td>2.2 × 3.8</td><td>90</td></tr>
-        <tr><td>Bedroom 2</td><td>3.8 × 3.8</td><td>155</td></tr>
-        <tr><td>Bedroom 3</td><td>4.0 × 3.8</td><td>164</td></tr>
-        <tr><td>Common Bath</td><td>2.5 × 2.5</td><td>67</td></tr>
-        <tr><td>Utility</td><td>2.0 × 2.5</td><td>54</td></tr>
-        <tr><td>Balcony</td><td>6.0 × 1.6</td><td>103</td></tr>
-      </tbody>
-      <tfoot><tr><td>Total carpet area</td><td>15.0 × 11.5</td><td>1,730</td></tr></tfoot>
-    </table>
-  </div>
-</section>
-
-<section class="wrap" id="contact">
-  <p class="eyebrow">05 — Work with us</p>
-  <h2 class="sec">Send us your 2D plan</h2>
-  <p class="sub">Give us a floor plan — a PDF, a CAD file or even a clear photo of a printed drawing — and we build this same package to your exact dimensions: the 3D model, the walkthrough link, the video and clean 2D drawings.</p>
-  <div class="grid">
-    <div class="card feat"><p class="num">STEP 1</p><h3>You send the plan</h3><p>Any readable format, with at least one dimension we can scale from.</p></div>
-    <div class="card feat"><p class="num">STEP 2</p><h3>We model it</h3><p>Built 1:1 in metres with real wall thicknesses, furniture and materials.</p></div>
-    <div class="card feat"><p class="num">STEP 3</p><h3>You get a link</h3><p>One URL with the walkthrough, the video and the drawings. Share it with anyone.</p></div>
-  </div>
-</section>
 </main>
 
 <footer>
   <div class="wrap foot">
-    <div><span class="muted">WhatsApp</span><br><a href="https://wa.me/917385880827">+91 73858 80827</a></div>
-    <div><span class="muted">Email</span><br><a href="mailto:dsgn0827@gmail.com">dsgn0827@gmail.com</a></div>
-    <div><span class="muted">Web</span><br><a href="https://dsgngraphics.com">dsgngraphics.com</a></div>
-    <div><span class="muted">Studio</span><br><span style="font-weight:650">Amravati, Maharashtra</span></div>
+    <div><span class="m">WhatsApp</span><a href="https://wa.me/917385880827">+91 73858 80827</a></div>
+    <div><span class="m">Email</span><a href="mailto:dsgn0827@gmail.com">dsgn0827@gmail.com</a></div>
+    <div><span class="m">Web</span><a href="https://dsgngraphics.com">dsgngraphics.com</a></div>
   </div>
-  <div class="wrap copy">© DSGN Graphics · Sample project shown for demonstration. Layout and areas are illustrative, not a built property.</div>
+  <div class="wrap copy">© DSGN Graphics</div>
 </footer>
-
 </body>
 </html>
