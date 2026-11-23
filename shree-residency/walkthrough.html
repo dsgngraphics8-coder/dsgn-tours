@@ -468,6 +468,21 @@ addEventListener('resize', () => {
 });
 
 window.__dbg={get cam(){return cam.position.toArray().map(v=>+v.toFixed(2))},get int(){return +G.Interior.position.y.toFixed(2)},get lvl(){return level}};
+window.__tour={
+  mode:(m)=>setMode(m),
+  level:(l)=>setLevel(l),
+  phase:(p)=>{document.getElementById('pRange').value=p; setPhase(p);},
+  at:(x,y,yw,pt)=>{cam.position.copy(T(x,y,levelY(level)+EYE)); yaw=yw; if(pt!==undefined)pitch=pt;},
+  look:(yw,pt)=>{yaw=yw; if(pt!==undefined)pitch=pt;},
+  orbit:(az,el,d)=>{const t=orbit.target;
+    cam.position.set(t.x+d*Math.cos(el)*Math.cos(az), t.y+d*Math.sin(el), t.z+d*Math.cos(el)*Math.sin(az));
+    cam.lookAt(t);},
+  target:(x,y,z)=>orbit.target.set(x,y,z),
+  evening:(on)=>{const b=document.getElementById('bEve');
+    if((b.getAttribute('aria-pressed')==='true')!==on) b.click();},
+  shadow:()=>{renderer.shadowMap.needsUpdate=true;},
+  frame:()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))
+};
 const SPEED = 2.6;
 let last = performance.now();
 (function loop(){
