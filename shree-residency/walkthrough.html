@@ -183,14 +183,7 @@ const PHASES = [
   ['Terrace amenities','pool, gym, hall, pergola']
 ];
 
-const ROOMS = {
-  '3': [['Living / Dining',10.6,15.6, 6.6,13.2],['Hall',8.0,11.9, 14.5,11.9],
-        ['Master Bed',7.8,8.45, 7.8,11.0],['Bedroom 2',11.3,8.45, 11.3,11.0],
-        ['Bedroom 3',15.0,8.45, 15.0,11.0],['Kitchen',12.6,13.1, 14.4,13.8]],
-  '2': [['Living / Dining',11.6,20.4, 6.8,17.6],['Hall',14.2,17.2, 7.0,17.2],
-        ['Master Bed',7.8,24.55, 7.8,22.0],['Bedroom 2',11.1,24.55, 11.1,22.0],
-        ['Kitchen',13.2,20.9, 14.6,22.0],['Balcony',13.8,23.6, 13.8,25.2]]
-};
+let ROOMS = { '3': [], '2': [] };
 
 new GLTFLoader().load('assets/model.glb', (gltf) => {
   const floorSrc = new THREE.Group();
@@ -222,7 +215,10 @@ const refresh = () => { renderer.shadowMap.needsUpdate = true; };
 
 // ---------- navigation ----------
 let NAV = {floor:[], stilt:[], terrace:[]};
-fetch('assets/nav.json').then(r => r.json()).then(d => { NAV = d; });
+fetch('assets/nav.json').then(r => r.json()).then(d => {
+  NAV = d;
+  if (d.views){ ROOMS = d.views; if (mode !== 'scheme'){ buildRoomChips(mode); } }
+});
 const RADIUS = 0.30;
 let navSet = 'floor', level = 1;           // level: 0 = stilt, 1..7 = floors, 8 = terrace
 
