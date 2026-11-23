@@ -49,6 +49,13 @@ button{font-family:inherit}
   font:700 12px var(--font);padding:8px 13px;border-radius:999px;cursor:pointer;backdrop-filter:blur(14px)}
 #rooms button:hover{border-color:var(--accent)}
 #rooms button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+#levels{position:fixed;right:max(12px,env(safe-area-inset-right,0px));top:calc(max(12px,env(safe-area-inset-top,0px)) + 92px);
+  display:flex;flex-direction:column;gap:3px;padding:5px;z-index:7}
+#levels button{border:0;background:transparent;color:var(--muted);font:700 11.5px var(--mono);
+  padding:6px 10px;border-radius:8px;cursor:pointer;min-width:62px;text-align:right}
+#levels button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+@media (max-width:620px){ #levels{top:auto;bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 150px);flex-direction:row;flex-wrap:wrap;max-width:46vw}
+  #levels button{min-width:0;padding:6px 8px} }
 
 #phase{position:fixed;left:50%;transform:translateX(-50%);
   bottom:max(14px,env(safe-area-inset-bottom,0px));width:min(620px,calc(100vw - 24px));padding:12px 16px 14px;z-index:7}
@@ -90,6 +97,7 @@ button.t[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);b
 </div>
 
 <div id="rooms" hidden></div>
+<div id="levels" class="card" hidden></div>
 
 <div id="tools">
   <button class="t" id="bEve" aria-pressed="false">Evening</button>
@@ -118,6 +126,7 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 
 const FH = 3.0, FLOORS = 7, EYE = 1.58, LEVEL = FH;
+const TX0 = 6.0, TX1 = 36.0, TY0 = 8.0, TY1 = 25.0;
 const CENTRE = new THREE.Vector3(21, 9, -16);
 // blender (x,y) -> three (x, h, -y)
 const T = (x, y, h) => new THREE.Vector3(x, h, -y);
@@ -211,6 +220,87 @@ new GLTFLoader().load('assets/model.glb', (gltf) => {
 
 const refresh = () => { renderer.shadowMap.needsUpdate = true; };
 
+// ---------- navigation ----------
+let NAV = {floor:[], stilt:[], terrace:[]};
+fetch('assets/nav.json').then(r => r.json()).then(d => { NAV = d; });
+const RADIUS = 0.30;
+let navSet = 'floor', level = 1;           // level: 0 = stilt, 1..7 = floors, 8 = terrace
+
+function levelY(l){ return l === 8 ? 24.0 : l * FH; }
+
+function collide(){
+  const list = NAV[navSet] || [];
+  let px = cam.position.x, pz = cam.position.z;
+  for (let i = 0; i < list.length; i++){
+    const b = list[i];
+    const cx = Math.max(b[0], Math.min(px, b[1]));
+    const cz = Math.max(b[2], Math.min(pz, b[3]));
+    let dx = px - cx, dz = pz - cz;
+    let d2 = dx*dx + dz*dz;
+    if (d2 >= RADIUS*RADIUS) continue;
+    if (d2 > 1e-9){
+      const d = Math.sqrt(d2), k = (RADIUS - d) / d;
+      px += dx * k; pz += dz * k;
+    } else {
+      // dead centre of a wall: push out the shortest way
+      const l = px-b[0], r = b[1]-px, u = pz-b[2], v = b[3]-pz;
+      const m = Math.min(l,r,u,v);
+      if (m === l) px = b[0]-RADIUS; else if (m === r) px = b[1]+RADIUS;
+      else if (m === u) pz = b[2]-RADIUS; else pz = b[3]+RADIUS;
+    }
+  }
+  cam.position.x = px; cam.position.z = pz;
+}
+
+function setLevel(l){
+  level = l;
+  navSet = (l === 0) ? 'stilt' : (l === 8) ? 'terrace' : 'floor';
+  const y = levelY(l);
+  // the furnished interior follows you up the tower
+  G.Interior.visible = (l >= 1 && l <= 7);
+  G.Interior.position.y = (l >= 1 && l <= 7) ? FH*(l-1) : 0;
+  G.Stilt.visible = true; G.Terrace.visible = (l === 8) || (l === 7);
+  floorGroups.forEach((g,i) => {
+    const n = i + 1;
+    g.visible = (l === 0) ? (n === 1) : (l === 8) ? (n === 7) : (n === l || n === l+1);
+  });
+  cam.position.y = y + EYE;
+  [...document.querySelectorAll('#levels button')].forEach(b =>
+    b.setAttribute('aria-pressed', (+b.dataset.l) === l));
+  refresh();
+}
+
+function buildLevels(){
+  const bar = document.getElementById('levels');
+  bar.innerHTML = '';
+  const defs = [[8,'Terrace']].concat(
+    [7,6,5,4,3,2,1].map(n => [n, n + (n===1?'st':n===2?'nd':n===3?'rd':'th') + ' flr']),
+    [[0,'Stilt']]);
+  for (const [l, label] of defs){
+    const b = document.createElement('button');
+    b.textContent = label; b.dataset.l = l;
+    b.addEventListener('click', () => {
+      const keepX = cam.position.x, keepZ = cam.position.z;
+      const inside = keepX > TX0 && keepX < TX1 && keepZ > -TY1 && keepZ < -TY0;
+      setLevel(l);
+      if (l >= 1 && l <= 7){
+        if (inside){ cam.position.x = keepX; cam.position.z = keepZ; }
+        else {
+          // coming from the stilt or terrace: land in the flat's living room
+          const r = ROOMS[mode === '2' ? '2' : '3'][0];
+          cam.position.copy(T(r[1], r[2], levelY(l) + EYE));
+          yaw = Math.atan2(-(r[3] - r[1]), (r[4] - r[2])); pitch = -0.03;
+        }
+      } else if (l === 0){
+        cam.position.copy(T(21, 10.5, EYE)); yaw = 0; pitch = -0.02;
+      } else {
+        cam.position.copy(T(20.5, 20.0, 24.0 + EYE)); yaw = Math.PI*0.62; pitch = -0.05;
+      }
+    });
+    bar.appendChild(b);
+  }
+}
+
 let mode = 'scheme';
 function setPhase(p){
   if (mode !== 'scheme') return;
@@ -263,7 +353,8 @@ renderer.domElement.addEventListener('pointerup', lookEnd);
 renderer.domElement.addEventListener('pointercancel', lookEnd);
 
 function goTo(x, y, lookX, lookY){
-  cam.position.copy(T(x, y, LEVEL + EYE));
+  if (level < 1 || level > 7) setLevel(1);
+  cam.position.copy(T(x, y, levelY(level) + EYE));
   if (lookX !== undefined) yaw = Math.atan2(-(lookX - x), (lookY - y));
   pitch = -0.03;
 }
@@ -291,6 +382,7 @@ function setMode(m){
   document.getElementById('m2').setAttribute('aria-pressed', m === '2');
   document.getElementById('phase').hidden = !scheme;
   document.getElementById('rooms').hidden = scheme;
+  document.getElementById('levels').hidden = scheme;
   document.getElementById('pad').hidden   = scheme;
   document.getElementById('hint').hidden  = scheme;
   document.getElementById('bAer').hidden  = !scheme;
@@ -306,16 +398,15 @@ function setMode(m){
     hemi.groundColor.set(0x6d7a63);
     G.Terrace.visible = true; G.Props.visible = true;
     floorGroups.forEach(g => g.visible = true);
-    G.Interior.visible = true;
+    G.Interior.visible = true; G.Interior.position.y = 0;
     setPhase(+range.value);
     orbit.target.copy(CENTRE);
   } else {
     cam.fov = 70; cam.updateProjectionMatrix();
     fill.intensity = 42;
     hemi.groundColor.set(0xd9d3c8);
+    buildLevels(); setLevel(level >= 1 && level <= 7 ? level : 1);
     // only the flat's own floor, so upper storeys do not block the light
-    floorGroups.forEach((g,i) => g.visible = (i <= 1));
-    G.Terrace.visible = false; G.Interior.visible = true;
     buildRoomChips(m);
     const r = ROOMS[m][0];
     goTo(r[1], r[2], r[3], r[4]);
@@ -376,6 +467,7 @@ addEventListener('resize', () => {
   renderer.setSize(innerWidth, innerHeight); refresh();
 });
 
+window.__dbg={get cam(){return cam.position.toArray().map(v=>+v.toFixed(2))},get int(){return +G.Interior.position.y.toFixed(2)},get lvl(){return level}};
 const SPEED = 2.6;
 let last = performance.now();
 (function loop(){
@@ -392,10 +484,14 @@ let last = performance.now();
       const sy = Math.sin(yaw), cy = Math.cos(yaw);
       cam.position.x += (-sy*fwd + cy*str) * SPEED * dt;
       cam.position.z += (-cy*fwd - sy*str) * SPEED * dt;
-      cam.position.x = Math.max(6.4, Math.min(35.6, cam.position.x));
-      cam.position.z = Math.max(-24.6, Math.min(-8.4, cam.position.z));
+      const pad = (navSet === 'stilt') ? 0.6 : 0.2;
+      const bx0 = (navSet === 'stilt') ? 0.4 : TX0 - pad, bx1 = (navSet === 'stilt') ? 41.6 : TX1 + pad;
+      const bz0 = (navSet === 'stilt') ? -31.6 : -(TY1 + pad), bz1 = (navSet === 'stilt') ? -0.4 : -(TY0 - pad);
+      cam.position.x = Math.max(bx0, Math.min(bx1, cam.position.x));
+      cam.position.z = Math.max(bz0, Math.min(bz1, cam.position.z));
+      collide();
     }
-    cam.position.y = LEVEL + EYE;
+    cam.position.y = levelY(level) + EYE;
     cam.rotation.set(0,0,0);
     cam.rotateY(yaw); cam.rotateX(pitch);
     fill.position.copy(cam.position); fill.position.y += 0.9;
