@@ -101,18 +101,18 @@ const isTouch=matchMedia('(pointer:coarse)').matches; if(isTouch){document.body.
 
 // ---- Rooms (Blender metres; x right, y up in plan). Three: (x, h, -y)
 const ROOMS=[
- {id:'entry',name:'Entrance',x0:13.8,x1:17,y0:6.5,y1:7.7,  size:'Main door · foyer',          pos:[14.3,7.1],look:[9,6.9]},
- {id:'living',name:'Living Room',x0:0,x1:6.6,y0:0,y1:6.5, size:'6.6 × 6.5 m · 462 sq ft', pos:[5.6,4.9],look:[2,2.4]},
+ {id:'entry',name:'Entrance',x0:15,x1:17,y0:6.5,y1:7.7,  size:'Main door · foyer',          pos:[13.1,7.08],look:[6,7.08]},
+ {id:'living',name:'Living Room',x0:0,x1:6.6,y0:0,y1:6.5, size:'6.6 × 6.5 m · 462 sq ft', pos:[6.0,5.7],look:[1.6,1.8]},
  {id:'dining',name:'Dining',x0:6.6,x1:10.5,y0:0,y1:6.5,  size:'3.9 × 6.5 m · 273 sq ft', pos:[9.6,5.6],look:[8.2,3]},
- {id:'kitchen',name:'Kitchen',x0:10.5,x1:15,y0:0,y1:4,   size:'4.5 × 4.0 m · 194 sq ft', pos:[11.8,3.4],look:[13.8,0.8]},
+ {id:'kitchen',name:'Kitchen',x0:10.5,x1:15,y0:0,y1:4,   size:'4.5 × 4.0 m · 194 sq ft', pos:[11.1,3.5],look:[14.6,1.1]},
  {id:'balcony',name:'Balcony',x0:0,x1:6,y0:-1.6,y1:0,    size:'6.0 × 1.6 m · 103 sq ft', pos:[3,-0.6],look:[3,-4]},
- {id:'master',name:'Master Bedroom',x0:0,x1:5,y0:6.5,y1:11.5, size:'5.0 × 5.0 m · 269 sq ft', pos:[4.2,9.8],look:[1.5,7.3]},
+ {id:'master',name:'Master Bedroom',x0:0,x1:5,y0:6.5,y1:11.5, size:'5.0 × 5.0 m · 269 sq ft', pos:[2.6,10.7],look:[2.6,6.7]},
  {id:'mbath',name:'Master Bath',x0:5,x1:7.2,y0:7.7,y1:11.5, size:'2.2 × 3.8 m · 90 sq ft', pos:[6.1,9.9],look:[6,11.4]},
  {id:'bed2',name:'Bedroom 2',x0:7.2,x1:11,y0:7.7,y1:11.5, size:'3.8 × 3.8 m · 155 sq ft', pos:[8.3,8.2],look:[10.5,10.4]},
  {id:'bed3',name:'Bedroom 3',x0:11,x1:15,y0:7.7,y1:11.5, size:'4.0 × 3.8 m · 164 sq ft', pos:[11.9,8.3],look:[13.5,10.8]},
  {id:'bath',name:'Common Bath',x0:10.5,x1:13,y0:4,y1:6.5, size:'2.5 × 2.5 m · 67 sq ft', pos:[12.2,6.1],look:[11.2,4.4]},
  {id:'utility',name:'Utility',x0:13,x1:15,y0:4,y1:6.5,   size:'2.0 × 2.5 m · 54 sq ft', pos:[14,4.5],look:[14.5,6.2]},
- {id:'corridor',name:'Corridor',x0:5,x1:15,y0:6.5,y1:7.7, size:'10 m passage',          pos:[13.5,7.1],look:[6,7.1]},
+ {id:'corridor',name:'Corridor',x0:5,x1:15,y0:6.5,y1:7.7, size:'10 m passage',          pos:[12.6,7.08],look:[6,7.08]},
 ];
 const EYE=1.55;
 const T=(x,y,h=EYE)=>new THREE.Vector3(x,h,-y);
